@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>@import url(https://fonts.googleapis.com/css?family=Lato:400,700,300);
+		body {
+		  font-family: 'Lato', sans-serif;
+		}
+		
+		.container {
+		  position: absolute;
+		  top: 0;
+		  right: 0;
+		  bottom: 0;
+		  left: 0;
+		  
+		  background-color: #bf7a6b;
+		  background-image: -webkit-linear-gradient(bottom left, #bf7a6b 0%, #e6d8a7 100%);
+		  background-image: linear-gradient(to top right,#bf7a6b 0%, #e6d8a7 100%);
+		}
+		
+		.form {
+		  width: 400px;
+		  height: 400px;
+		  position: absolute;
+		  top: 25%;
+		  left: 5%;
+		 
+		}
+		
+		.file-upload-wrapper {
+		  position: relative;
+		  width: 100%;
+		  height: 60px;
+		}
+		.file-upload-wrapper:after {
+		  content: attr(data-text);
+		  font-size: 18px;
+		  position: absolute;
+		  top: 0;
+		  left: 0;
+		  background: #fff;
+		  padding: 10px 15px;
+		  display: block;
+		  width: calc(100% - 40px);
+		  pointer-events: none;
+		  height: 40px;
+		  line-height: 40px;
+		  color: #AE0;
+		  border-radius: 5px 10px 10px 5px;
+		  font-weight: 300;
+		}
+		.file-upload-wrapper:before {
+		  content: 'Upload';
+		  position: absolute;
+		  top: 0;
+		  right: 0;
+		  display: inline-block;
+		  height: 60px;
+		  background: #4daf7c;
+		  color: #fff;
+		  font-weight: 700;
+		  z-index: 25;
+		  font-size: 16px;
+		  line-height: 60px;
+		  padding: 0 15px;
+		  text-transform: uppercase;
+		  pointer-events: none;
+		  border-radius: 0 5px 5px 0;
+		}
+		.file-upload-wrapper:hover:before {
+		  background: #999;
+		}
+		.file-upload-wrapper input {
+		  opacity: 0;
+		  position: absolute;
+		  top: 0;
+		  right: 0;
+		  bottom: 0;
+		  left: 0;
+		  z-index: 99;
+		  height: 40px;
+		  margin: 0;
+		  padding: 0;
+		  display: block;
+		  cursor: pointer;
+		  width: 100%;
+		}
+.conta
+{
+	position: absolute;
+	left: 50px;
+	top: 50px;
+}
+.preview
+{
+	position: absolute;
+	left:40%;
+	top: 0px;
+}
+		</style>
+</head>
+<body>
+	<div class="container">
+
+	
+    <div class="conta">
+        <form class="form" method="post" action="/" enctype="multipart/form-data" >
+          <div class="file-upload-wrapper" data-text="Select your file!">
+			<input name="file-upload-field"  id="upload" type="file" class="file-upload-field" value="">
+		</div>
+			<input type="submit" onclick="PreviewVideo()" style="background: #4daf7c;;" class="file-upload-wrapper" value="Get Prediction...">
+        </form>
+      </div>
+
+	  <div id="preview" class="preview">
+
+		</div>
+<div id='prediction' class='predictions'>
+    <p>
+        {% with messages = get_flashed_messages() %}
+		  {% if messages %}
+		  <input type="hidden" id="first" value={{ messages[0] }}></div>
+            <ul class=flashes>
+            {% for message in messages %}
+			  <div id="message" >{{ message }}
+			
+            {% endfor %}
+            </ul>
+          {% endif %}
+        {% endwith %}
+    </p>
+</div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script>$("form").on("change", ".file-upload-field", function(){ 
+    $(this).parent(".file-upload-wrapper").attr("data-text",$(this).val().replace(/.*(\/|\\)/, '') );
+});
+
+
+
+</script>
+<script>
+	$( document ).ready(function() {
+		
+		let fullPath = $('#first').val();
+		if (fullPath) {
+	let x = document.createElement("VIDEO");
+	
+	  if (x.canPlayType("video/mp4")) {
+		x.setAttribute("src","http://127.0.0.1:8887/"+fullPath);
+	  } 
+	  x.setAttribute("width", "320");
+	  x.setAttribute("height", "240");
+	  x.setAttribute("controls", "controls");
+	  document.getElementById("preview").appendChild(x);
+	
+		
+	  
+	}
+		
+});
+	
+		
+
+	let wid =  window.outerWidth;
+	let height = window.outerHeight;
+	$('.container').css({
+	  "position": "absolute",
+	  
+	  
+    });
+	</script>
+	
+</body>
+</html>

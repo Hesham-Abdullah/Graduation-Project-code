@@ -1,0 +1,9 @@
+Things to Change:
+
+1- Add pictures of how we imagine it'll look like
+2- Separate Data Gathering form Model #1 
+2.1 - Change Modle #1 Archeticture place, add small preview of what we are thinking about and how are we going to solve the problem (Abstract)
+3- Figure 2.4 is explained already 2 times before so i think it's not nessecery to use it
+4- Proper Description for Tensorboard Images
+5- We Didn't Mention after using 30 frames that we used another model with another architecture
+6- Add the Speach Work that has been made

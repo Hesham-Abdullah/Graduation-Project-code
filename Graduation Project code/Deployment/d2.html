@@ -1,0 +1,168 @@
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"> </script>
+    <script src="loadModel.js"> </script>
+    <script async src="opencv.js" onload="onOpenCvReady(1);" type="text/javascript"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" href="./main.css">
+</head>
+
+<body class="bg-gradient-dark"> 
+    <section id="navbar">
+        <!-- Image and text -->
+        <nav class="navbar navbar-dark bg-dark">
+            <a class="navbar-brand" href="#">
+                ARSL Interpreter
+            </a>
+        </nav>
+    </section>
+    <div style="text-align: center;">
+        <button class="btn btn-outline-primary" onclick="chooseText()">Select Classes File</button>
+        <input type="file" accept=".txt" id="classReader" #input1>
+
+
+        <button class="btn btn-outline-primary" onclick="chooseVideo()">Select Video</button>
+        <input type="file" id="videoSelect" accept="video/*">
+        <br>
+        <div class="video">
+            <video id="videoInput" width="420" height="380" muted>
+                <source src="" type="video/mp4">
+                <!-- <source src="mov_bbb.ogg" type="video/ogg"> -->
+                Your browser does not support HTML video.
+            </video>
+        </div>
+        <br><br>
+
+        <button class=" btn  btn-success " id="start" value=1 onclick="updateStreaming(this)">Start</button>
+
+        <button class="btn  btn-danger" id="stop" value=0 onclick="updateStreaming(this)">Stop</button>
+
+        <button class="btn  btn-warning" id="predict" onclick="makePrediction()">Predict</button>
+
+
+    </div>
+    <br>
+    <div style="text-align: center;">
+        <p id="predStatus">Prediction Area</p>
+        <input id="results" type="text" readonly placeholder="Result">
+    </div>
+
+    <br>
+
+    <div class="inputoutput" style="text-align: center;" hidden>
+        <canvas id="canvasOutput"></canvas>
+        <div class="caption">canvasOutput</div>
+    </div>
+    <script>
+        let video = document.getElementById('videoInput');
+        let can = document.getElementById('canvasOutput');
+        let classes = ['Empty'];
+        frames = []
+        function chooseText() {
+            document.getElementById("classReader").click();
+        }
+        function chooseVideo() {
+            document.getElementById("videoSelect").click();
+        }
+        let classesInput = document.getElementById('classReader').addEventListener('change', function () {
+            var fr = new FileReader();
+            fr.onload = function () {
+                classes = fr.result.split("\n");
+            }
+            fr.readAsText(this.files[0]);
+        })
+
+        let videoSelect = document.getElementById('videoSelect').addEventListener('change', function () {
+            video.src = 'Vid/' + this.files[0]['name']
+            frames = []
+        })
+
+
+        streaming = 0
+        const loadM = new loadModel()
+        loadM.prepareModel()
+
+        function updateStreaming(input) {
+            streaming = input.value
+            if (streaming == 1) {
+                console.log('Start')
+                onOpenCvReady()
+            }
+            else {
+                console.log('Stop')
+            }
+        }
+        function checkStreaming() {
+            return streaming
+        }
+
+        async function makePrediction() {
+            rescaledFrames = [];
+            var i;
+            for (i = 0; i < 30; i++) {
+                rescaledFrames.push(frames[i + 2])
+            }
+
+            pred = await loadM.predict(rescaledFrames)
+            document.getElementById('results').value = classes[pred];
+            responsiveVoice.speak(classes[pred], 'Arabic Male');
+        }
+        function onOpenCvReady(firstTime = 0) {
+
+            if (firstTime)
+                alert('OpenCV.js is ready.')
+
+
+            let src = new cv.Mat(video.height, video.width, cv.CV_8UC4);
+            let dst = new cv.Mat();
+            let cap = new cv.VideoCapture(video);
+            let dsize = new cv.Size(300, 300);
+
+
+            const FPS = 30;
+            function processVideo() {
+                try {
+                    streaming = checkStreaming()
+                    if (streaming == 0) {
+                        // clean and stop.
+                        src.delete();
+                        dst.delete();
+                        video.pause()
+                        return;
+                    }
+                    video.play()
+                    let begin = Date.now();
+                    // start processing.
+                    cap.read(src);
+                    // cv.cvtColor(src, dst, cv.COLOR_RGBA2GRAY);
+                    cv.resize(src, dst, dsize, 0, 0, cv.INTER_AREA);
+                    cv.imshow('canvasOutput', dst);
+
+                    frames.push(tf.browser.fromPixels(can))
+                    console.log('Length of the Video Frames -> ')
+                    console.log(frames.length)
+                    if (frames.length == 60) {
+                        streaming = false;
+                    }
+                    // if (frames.length >= 30){
+                    //     clearTimeout(t)
+                    // }
+                    // console.log(frames)
+
+                    // schedule the next one.
+                    let delay = 1000 / FPS - (Date.now() - begin);
+                    t = setTimeout(processVideo, delay);
+
+                } catch (err) {
+                    console.log(err);
+                }
+            };
+
+            // schedule the first one.
+            t = setTimeout(processVideo, 0);
+        }
+
+    </script>
+    <script src="https://code.responsivevoice.org/responsivevoice.js?key=Xpk9XX4G"></script>
+    
+</body>

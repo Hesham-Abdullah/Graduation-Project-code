@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test frames to videos</title>
+
+    <script src="index.js"></script>
+    <script src="test.js"></script>
+    <script>
+        
+        VideoToFrames.getFrames('3amel_1.mp4', 30, VideoToFramesMethod.totalFrames).then(function (frames) {
+
+    
+    //Do something with the frame data: eg: output them as canvasses to the DOM
+        frames.forEach(function (frame) {
+        var canvas = document.createElement('canvas');
+        canvas.width = frame.width;
+        canvas.height = frame.height;
+        canvas.getContext('2d').putImageData(frame, 0, 0);
+        document.getElementsByTagName('body')[0].appendChild(canvas);
+    });
+    
+
+});
+    </script>
+</head>
+<body>
+</body>
+</html>

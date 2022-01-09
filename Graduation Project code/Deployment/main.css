@@ -1,0 +1,36 @@
+body {
+    background-image: url(19273.jpg);
+    background-size: contain;
+}
+#results{
+    text-align: center;
+    color: #218838;
+}
+#predStatus{
+    font-weight: bolder;
+}
+
+#classReader {
+    position: absolute;
+    top: -100px;
+    left: -100px;
+}
+
+#videoSelect {
+    position: absolute;
+    top: -100px;
+    left: -100px;
+}
+
+button {
+    margin-bottom: 15px;
+    margin-top: 15px;
+}
+
+.video {
+    /* background-color: gray; */
+    width: 420px;
+    height: 380px;
+    margin: auto;
+    background-color: white;
+}

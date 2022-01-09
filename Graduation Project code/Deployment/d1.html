@@ -1,0 +1,72 @@
+<head>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"> </script>
+<script src="loadModel.js"> </script>
+<script async src="opencv.js" onload="onOpenCvReady();" type="text/javascript"></script>
+<p id="status">OpenCV.js is loading...</p>
+</head>
+
+<div style="text-align: center;">
+    <label for="file">Select Video</label>
+    <input type="file" id="file" name="fileSelector" onchange="playVid(this)">
+    
+    <br><br>
+
+    <label for="multifile">Select frames</label>
+    <input type="file" id="multifile" name="fileSelector" multiple onchange="getFrames(this)" accept="image/*">
+
+    <br><br>
+
+    <video id="video1" width="420" height="380" controls muted>
+        <source src="" type="video/*">
+
+    </video>
+
+    <script>
+        // const loadM = new loadModel()
+        // loadM.print()
+        
+        function getFrames(input){
+            framesCollection = []
+            let frames = input.files
+            frames.forEach(element => {
+                element = '/initialFrames/' + element['name']
+                console.log(element)
+                
+                // element.onload = function(){
+                let mat = cv.readImage(element)
+                console.log('cv Mat -> ')
+                console.log(mat)
+                framesCollection.push(mat)
+                // }
+
+            });
+            console.log('--------------End-------------')
+            console.log(framesCollection)
+            // cv.imshow('canvasOutput', framesCollection[0])
+            // framesCollection.forEach(element => {
+            //     element.delete()
+            // });
+        }
+
+        function playVid(input){
+            let vidName = input.files[0]['name']
+            console.log(vidName)
+            var vidElem = document.getElementById('video1')
+
+            vidElem.src = vidName;
+
+            vidElem.play()
+        }
+        
+        function onOpenCvReady() {
+           document.getElementById('status').innerHTML = 'OpenCV.js is ready.';
+        }
+    </script>
+
+
+
+</div>
+<div class="inputoutput">
+    <canvas id="canvasOutput" ></canvas>
+    <div class="caption">canvasOutput</div>
+</div>
