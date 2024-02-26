@@ -59,5 +59,5 @@ Our current results aren’t perfect and we have many future plans for our proje
 2- Deploy the new model on the hardware device using Raspberry Pi as our main controller with the needed gadgets, a camera, microphone, speaker, etc. the users will use this portable device whenever they need to talk to anyone that is not familiar with Arabic sign language easily and reliably.
 
 ## Figures
-- Figure 2: The final project flow graph[The final project flow graph](https://github.com/Hesham-Abdullah/Graduation-Project-code/blob/main/assets/2.png)
+- Figure 2: The final project flow graph ![The final project flow graph](https://github.com/Hesham-Abdullah/Graduation-Project-code/blob/main/assets/2.png)
 
